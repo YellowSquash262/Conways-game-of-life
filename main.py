@@ -1,15 +1,16 @@
 import pygame
 import sys 
 
-grid_s = 70
-screen_s = 700
+grid_s = 20
+screen_s = 800
+frame_skip = 10
+
 cell_s = screen_s/grid_s
 
 #pausing
 pause = False
 pause_last = False
-
-sd = 1
+frame = 1
 
 grid = [[0 for _ in range(grid_s)] for _ in range(grid_s)]
 prev_grid = [row[:] for row in grid]
@@ -20,7 +21,7 @@ def draw_grid(screen):
             rect = pygame.Rect(x * cell_s, y * cell_s, cell_s, cell_s)
             color = (255, 255,  255) if grid[y][x] == 1 else (0, 0, 0)
             pygame.draw.rect(screen, color, rect)
-            pygame.draw.rect(screen, (150, 150, 150), rect, 1)
+            pygame.draw.rect(screen, (50, 50, 50), rect, 1)
 
 def buttons_func():
     global pause_last, pause
@@ -90,10 +91,16 @@ while running:
     draw_grid(screen)
     pygame.display.flip()
 
-    clock.tick(40) # Slowed down for easier viewing
+    clock.tick(100) # Slowed down for easier viewing
+
+    if frame > frame_skip:
+        frame = 1
+    if frame == 1:
+        update_cells()
+
+    frame += 1
 
     buttons_func()
-    update_cells()
     draw()
 
     for event in pygame.event.get():
